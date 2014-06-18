@@ -60,6 +60,7 @@ public class SaleInfoActivity extends BaseActivity{
 		
 		setContentView(R.layout.saleinfo);
 		
+		///github
 		//获取商户的图片
 		imageSale=(ImageView)findViewById(R.id.saleImage);		
 		//获取商户信息，名称和ID，再从数据库中获取并显示
