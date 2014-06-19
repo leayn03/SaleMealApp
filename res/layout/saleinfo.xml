@@ -53,7 +53,6 @@
 	            android:id="@+id/salesInfo"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
-	            android:text="全家便利店"
 	            android:textSize="20sp"
 	            android:layout_marginTop="15dip"
 	            android:layout_marginLeft="10dp"

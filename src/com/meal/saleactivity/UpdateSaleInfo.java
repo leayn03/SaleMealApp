@@ -23,6 +23,7 @@ import com.meal.activity.BaseActivity;
 import com.meal.activity.ipml.AsynThreadImpl;
 import com.meal.activity.ipml.UIThreadImpl;
 import com.meal.saleglobal.SaleGlobal;
+import com.meal.update.UpdateManager;
 
 
 public class UpdateSaleInfo extends BaseActivity{
@@ -34,6 +35,7 @@ public class UpdateSaleInfo extends BaseActivity{
 	ImageButton updateSalePictureNextButton;
 	ImageButton updateSaleInfoReturnButton;
 	ImageView salePicture;
+	Button updateAppCheck;
 	
 	String logo=null;
 	Bitmap bitmapPicture=null;
@@ -55,6 +57,7 @@ public class UpdateSaleInfo extends BaseActivity{
 		updateSalePasswordButton=(Button)findViewById(R.id.updateSalePasswordButton);
 		updateSalePictureNextButton=(ImageButton)findViewById(R.id.updateSalePictureNext);
 		updateSaleInfoReturnButton=(ImageButton)findViewById(R.id.updateSaleInfoReturnButton);
+		updateAppCheck=(Button)findViewById(R.id.updateAppCheck);
 		
 		
 		String name = null, address = null, phone =null ;
@@ -136,7 +139,16 @@ public class UpdateSaleInfo extends BaseActivity{
 			}
 		});
 		
-
+		//监听软件更新按钮
+		updateAppCheck.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				UpdateManager updateCheck = new UpdateManager(UpdateSaleInfo.this);
+				updateCheck.checkUpdate();
+			}
+		});
 		
 		//监听返回键
 		updateSaleInfoReturnButton.setOnClickListener(new OnClickListener() {
