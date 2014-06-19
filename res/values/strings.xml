@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Snackiller商户端V1.0-回归测试版</string>
+    <string name="app_name">Snackiller商户端V1.2版</string>
     <string name="showpageText">Snackiller</string>
     <string name="orderListDetail"> 订单详情</string>
     <string name="acceptOrderList">接受订单</string>
