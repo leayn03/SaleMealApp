@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical"
-                            android:background="@color/whiteBg" >
+              android:background="@color/whiteBg" >
     <RelativeLayout
             android:layout_width="fill_parent"
+            android:id="@+id/detailLayoutTitle"
             android:layout_height="55dip"
             android:background="@color/frame">
         <ImageButton
@@ -32,41 +33,45 @@
 
     <ListView
             android:id="@+id/orderList"
-             android:layout_weight="5"
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/detailLayoutTitle"
             />
-    <LinearLayout 
+    <RelativeLayout 
          android:layout_width="fill_parent"
-	     android:layout_height="wrap_content"
-	     android:layout_weight="1"
-	      android:orientation="horizontal">
+         android:layout_height="55dp"
+	      android:orientation="horizontal"
+	      android:layout_alignParentBottom="true"
+	      android:background="@color/bottomGray"
+	      android:padding="5dp">
             <Button
             android:id="@+id/acceptSaleButton"
             android:layout_width="wrap_content"
-            android:layout_height="45dip"
-            android:layout_marginLeft="55dip"
-            android:text="@string/acceptOrderList"
-
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="60dip"
+            android:layout_alignParentLeft="true"
             android:textSize="18sp"
+            android:text="@string/acceptOrderList"
             android:textColor="@color/btnTextColor"
             android:padding="5dip"
-            android:background="@color/buttonColor"
+            android:background="@drawable/button_click"
             />
            <Button
             android:id="@+id/returnSaleButton"
             android:layout_width="wrap_content"
-            android:layout_height="45dip"
-            android:layout_marginLeft="90dip"
-            android:text="@string/cancellReturn"
-
-           
-            android:textColor="@color/btnTextColor" 
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="60dip"
+            android:layout_alignParentRight="true"
             android:textSize="18sp"
+            android:text="@string/cancellReturn"
+            android:textColor="@color/btnTextColor"
             android:padding="5dip"
-            android:background="@color/buttonColor"
+            android:background="@drawable/button_click"
+          
             />
         
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
