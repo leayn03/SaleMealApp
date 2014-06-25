@@ -34,7 +34,7 @@ import com.meal.bean.Seller;
 import com.meal.dialog.MyProgressDialog;
 import com.meal.saleglobal.SaleGlobal;
 
-public class SaleOrderList extends BaseActivity {
+public class HistoryOrderList extends BaseActivity {
 
 	private ArrayList<Object> orderDataArray;
 	List<Map<String, Object>> orderList = new ArrayList<Map<String, Object>>();
@@ -59,7 +59,7 @@ public class SaleOrderList extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.orderlist);
+		setContentView(R.layout.historyorderlist);
 		loginProgressDialog = MyProgressDialog.createDialog(this);   //progressbar 2
 	
 		 if(SaleGlobal.seller!=null)
@@ -67,23 +67,19 @@ public class SaleOrderList extends BaseActivity {
 			 numberSeller=SaleGlobal.seller.getSid();	
 		    }
 		
-		orderListview = (ListView) findViewById(R.id.listView);
+		orderListview = (ListView) findViewById(R.id.listHistoryView);
 
 		initOrderList();
 
 
-		 orderReturnButton=(ImageButton)findViewById(R.id.OrderReturnButton);
+		 orderReturnButton=(ImageButton)findViewById(R.id.HistoryReturnButton);
 		 //返回按钮监听
 		 orderReturnButton.setOnClickListener(new OnClickListener() {
 		
 		 @Override
 		 public void onClick(View v) {
 		 // TODO Auto-generated method stub
-//	     SaleOrderList.this.finish();
-				Intent intent = new Intent();
-				intent.setClass(SaleOrderList.this, SaleInfoActivity.class);
-				startActivity(intent);
-
+	     HistoryOrderList.this.finish();
 		 }
 		 });
 
@@ -105,17 +101,17 @@ public class SaleOrderList extends BaseActivity {
 				
 				if(0==msg.arg2)
 				{
-					orderListview.setAdapter(new MyAdapter(SaleOrderList.this, R.layout.orderlist_row,
+					orderListview.setAdapter(new MyAdapter(HistoryOrderList.this, R.layout.historyorderlist_row,
 							orderList, new String[] { "itemNumber", "itemTime",
-									"itemButton" }, new int[] { R.id.itemNumber,
-									R.id.itemTime, R.id.itemButton }));
+									"itemButton" }, new int[] { R.id.itemDetailNumber,
+									R.id.itemDetailTime, R.id.itemDetailButton }));
 					loginProgressDialog.dismiss();  //progressbar 4
 				}
 				
 				if(1==msg.arg2)
 				{
 					loginProgressDialog.dismiss();  //progressbar 4
-			    	Toast toast=Toast.makeText(SaleOrderList.this, "无已提交的订单存在！",Toast.LENGTH_LONG);//输入有误，请重新输入
+			    	Toast toast=Toast.makeText(HistoryOrderList.this, "无历史订单存在，赶紧促销吧！",Toast.LENGTH_LONG);//输入有误，请重新输入
 			    	toast.setGravity(Gravity.TOP , 0,180);
 			    	toast.show();
 
@@ -125,7 +121,7 @@ public class SaleOrderList extends BaseActivity {
 
 		});
 
-		setAsynThreadConfig("getSellerOrderList", true, new AsynThreadImpl() {
+		setAsynThreadConfig("getHistoryList", true, new AsynThreadImpl() {
 
 			@Override
 			public Message excute() {
@@ -134,15 +130,14 @@ public class SaleOrderList extends BaseActivity {
 				Message msg = Message.obtain();
 
 				orderDataArray = grouponManage.getSellerGrouponList(String.valueOf(numberSeller));
-				//只有状态为complete的订单才显示
+				//只有状态为success的订单才显示
 				if(null != orderDataArray  && 0!=orderDataArray.size() )
 				{
 					
 					for (int i = 0; i < orderDataArray.size(); i++) {
 						ordermap = new HashMap<String, Object>();
-
 						Groupon tempOrder = (Groupon) orderDataArray.get(i);
-						if (null != tempOrder && tempOrder.getStatus().equals("complete")) {
+						if (null != tempOrder && tempOrder.getStatus().equals("success")) {
 							msg.arg2=0;
 							long temp = tempOrder.getGid();
 							ordermap.put("itemNumber", "团购订单号：" + temp);
@@ -157,21 +152,23 @@ public class SaleOrderList extends BaseActivity {
 							groupListDetailArray.add(tempOrder);  //传groupon
 							orderList.add(ordermap);
 						}
+						
+
 					}
 				}
-
-
+				
 				if(0==orderListDetailArray.size())
 				{
 					msg.arg2=1;
 				}
-				finishAsynThread("getSellerOrderList"); // 完成
+
+				finishAsynThread("getHistoryList"); // 完成
 
 				return msg;
 
 			}
 		});
-		startAsynThread("getSellerOrderList"); // 开启线程
+		startAsynThread("getHistoryList"); // 开启线程
 
 		
 
@@ -266,7 +263,7 @@ public class SaleOrderList extends BaseActivity {
 				
 					Intent intent = new Intent();
 					intent.putExtras(bundleGroupon);
-					intent.setClass(SaleOrderList.this, SaleOrderInfo.class);
+					intent.setClass(HistoryOrderList.this, HistoryDetailOrder.class);
 					startActivity(intent);
 
 				}

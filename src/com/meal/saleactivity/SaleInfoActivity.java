@@ -158,6 +158,18 @@ public class SaleInfoActivity extends BaseActivity{
 			}
 		});
 		
+		//历史订单接口
+		Button historyButton=(Button)findViewById(R.id.historyButton);
+		historyButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent();
+				intent.setClass(SaleInfoActivity.this,HistoryOrderList.class);
+				startActivity(intent);
+			}
+		});
 		
 		
 		if(false == switchState)

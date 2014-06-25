@@ -97,6 +97,16 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+         <activity
+            android:name="com.meal.saleactivity.HistoryOrderList"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+          <activity
+            android:name="com.meal.saleactivity.HistoryDetailOrder"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
         <activity
             android:name="com.meal.activity.TestActivity"
             android:screenOrientation="portrait"

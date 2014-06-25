@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="@color/whiteBg" >
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:id="@+id/detailLayoutDetailTitle"
+            android:layout_height="55dip"
+            android:background="@color/frame">
+        <ImageButton
+                android:id="@+id/detailHistoryReturnButton"
+                android:src="@drawable/pre_btn"
+                android:background="@null"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"/>
+        <TextView
+                android:id="@+id/fileHistoryDetailText"
+                android:text="@string/orderListDetail"
+                android:background="@color/frame"
+                android:layout_width="fill_parent"
+                android:layout_height="55dip"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/titleText"
+                android:textSize="20sp"/>
+    </RelativeLayout>
+
+
+    <ListView
+            android:id="@+id/orderHistoryList"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/detailLayoutDetailTitle"
+            />
+   
+</RelativeLayout>
