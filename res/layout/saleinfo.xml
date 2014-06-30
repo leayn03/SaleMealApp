@@ -133,7 +133,7 @@
                     android:layout_marginRight="15dip"
                     android:layout_marginBottom="1dp"
                     android:layout_below="@id/changeButton"
-                    android:text="历史订单"
+                    android:text="已成功订单"
                      android:paddingLeft="20dp"
                     android:gravity="left|center_vertical"
 					android:textSize="20sp"

@@ -16,7 +16,7 @@
     <string name="changeGood">查看商品</string>
     <string name="startAccept">开启接单</string>
     <string name="closeAccept">关闭接单</string>
-    <string name="goToListView">查看订单详情</string>
+    <string name="goToListView">去接单</string>
     <string name="saleRegister">注册</string>
     <string name="saleName">商户名称</string>
     <string name="saleAddress">商户地址</string>
