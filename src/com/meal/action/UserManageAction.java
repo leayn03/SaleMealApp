@@ -3,6 +3,8 @@ package com.meal.action;
 import java.io.File;
 import java.util.HashMap;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,16 +65,26 @@ public class UserManageAction extends BaseAction {
 	/**
 	 * @return
 	 */
-	public User freeLogin() {
+	public User freeLogin(Activity activity) {
 
 		User user = null;
 
-		if (null != Global.user) {
+        SharedPreferences userInfo = activity.getSharedPreferences("user_info", 0);
 
-			user = login(Global.user.getName(), Global.user.getPassWord());
-			Global.user = user;
+        if(null != userInfo){
 
-		}
+            String userName = userInfo.getString("userName", "");
+            String passWord = userInfo.getString("passWord", "");
+
+            if (null != userName && null != passWord && !userName.equals("") && !passWord.equals("")){
+
+                user = login(userName, passWord, activity);
+
+                Global.user = user;
+
+            }
+
+        }
 
 		return user;
 
@@ -186,7 +198,7 @@ public class UserManageAction extends BaseAction {
 	 * @param passWord
 	 * @return
 	 */
-	public User login(final String userName, final String passWord) {
+	public User login(final String userName, final String passWord, Activity activity) {
 
 		User user = null;
 
@@ -209,6 +221,16 @@ public class UserManageAction extends BaseAction {
 
 			Global.user = user;
 
+            if (null != user){
+
+                SharedPreferences userInfo = activity.getSharedPreferences("user_info", 0);
+
+                userInfo.edit().putString("userName", userName).commit();
+
+                userInfo.edit().putString("passWord", passWord).commit();
+
+            }
+
 		}
 
 		return user;
@@ -218,7 +240,7 @@ public class UserManageAction extends BaseAction {
 	/**
      *
      */
-	public void logout() {
+	public void logout(Activity activity) {
 
 		final String uid = String.valueOf(Global.user.getUid());
 
@@ -231,6 +253,11 @@ public class UserManageAction extends BaseAction {
 					}
 				});
 		Global.user = null;
+		Global.token = null;
+        SharedPreferences userInfo = activity.getSharedPreferences("user_info", 0);
+        if (null != userInfo){
+        	userInfo.edit().clear().commit();
+        }
 
 	}
 

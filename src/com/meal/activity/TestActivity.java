@@ -124,7 +124,7 @@ public class TestActivity extends BaseActivity {
 				Message msg = Message.obtain();
 
 				msg.obj = userManage.login(loginInfo.get("userName"),
-						loginInfo.get("passWord"));
+						loginInfo.get("passWord"), TestActivity.this);
 
 				finishAsynThread("login");
 

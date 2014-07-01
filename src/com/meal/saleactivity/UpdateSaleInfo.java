@@ -245,6 +245,7 @@ private void closeEventListener(){
 
 
 					sellerManage.closeOrderFuntion(SaleGlobal.seller.getSid());
+					sellerManage.logout(UpdateSaleInfo.this);
 
 					finishAsynThread("logoutcloseOrderState");
 

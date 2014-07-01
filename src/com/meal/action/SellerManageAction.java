@@ -1,6 +1,5 @@
 package com.meal.action;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,13 +7,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.meal.bean.Constant;
 import com.meal.bean.Global;
 import com.meal.bean.LoginInfoForSeller;
 import com.meal.bean.Seller;
-import com.meal.util.HttpUtil;
 
 /**
  * @author
@@ -93,16 +93,26 @@ public class SellerManageAction extends BaseAction {
 	/**
 	 * @return
 	 */
-	public Seller freeLogin() {
+	public Seller freeLogin(Activity activity) {
 
 		Seller seller = null;
+		
+		SharedPreferences sellerInfo = activity.getSharedPreferences("seller_info", 0);
 
-		if (null != Global.seller) {
+        if(null != sellerInfo){
 
-			seller = login(Global.seller.getName(), Global.seller.getPassWord());
-			Global.seller = seller;
+            String sellerName = sellerInfo.getString("sellerName", "");
+            String passWord = sellerInfo.getString("passWord", "");
 
-		}
+            if (null != sellerName && null != passWord && !sellerName.equals("") && !passWord.equals("")){
+
+            	seller = login(sellerName, passWord, activity);
+
+                Global.seller = seller;
+
+            }
+
+        }
 
 		return seller;
 
@@ -181,6 +191,7 @@ public class SellerManageAction extends BaseAction {
 	 * @return
 	 */
 	public ArrayList<Object> getSellerList(final String type) {
+		
 
 		ArrayList<Object> sellerList = null;
 
@@ -245,13 +256,11 @@ public class SellerManageAction extends BaseAction {
 	 * @param passWord
 	 * @return
 	 */
-	public Seller login(final String sellerName, final String passWord) {
+	public Seller login(final String sellerName, final String passWord, Activity activity) {
 
 		Seller seller = null;
-		
-		Global.seller = null;
-		
-		Global.token = null;
+        
+        Global.token = null;
 
 		if (null != sellerName && null != passWord) {
 
@@ -270,6 +279,16 @@ public class SellerManageAction extends BaseAction {
 			seller = (Seller) send(SELLER_MODULE, SELLER_MODULE_LOGIN, loginInfoForSeller, Seller.class, null);
 
 			Global.seller = seller;
+			
+            if (null != seller){
+
+                SharedPreferences sellerInfo = activity.getSharedPreferences("seller_info", 0);
+
+                sellerInfo.edit().putString("sellerName", sellerName).commit();
+
+                sellerInfo.edit().putString("passWord", passWord).commit();
+
+            }
 
 		}
 
@@ -280,7 +299,7 @@ public class SellerManageAction extends BaseAction {
 	/**
      *
      */
-	public void logout() {
+	public void logout(Activity activity) {
 
 		final String sid = String.valueOf(Global.seller.getSid());
 
@@ -293,7 +312,11 @@ public class SellerManageAction extends BaseAction {
 					}
 				});
 		Global.seller = null;
-		Global.token = null;
+        SharedPreferences userInfo = activity.getSharedPreferences("user_info", 0);
+        if (null != userInfo){
+        	userInfo.edit().clear().commit();
+        }
+        
 
 	}
 

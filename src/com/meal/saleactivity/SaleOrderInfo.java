@@ -62,6 +62,7 @@ public class SaleOrderInfo extends BaseActivity{
 	
 	private MyProgressDialog loginProgressDialog;   //progressbar 1
 	
+	
     Seller seller=SaleGlobal.seller;
     Menu menu;
     Groupon groupSelect ;
@@ -302,7 +303,7 @@ public class SaleOrderInfo extends BaseActivity{
 							            if(null!=menu)
 							            {
 							            	msg.arg2=0;
-								            String stringName=menu.getName();
+								            String stringName=menu.getName();            
 								            menuResult.add(stringName+"*"+String.valueOf(strObj));	
 							            }
 							            else

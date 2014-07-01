@@ -174,7 +174,7 @@ private void initial()
 			
 			msg.arg1 = 1;
 			msg.obj = sellerManage.login(loginInfo.get("sellerName"),
-					loginInfo.get("passWord"));
+					loginInfo.get("passWord"), SaleLoginActivity.this);
 			if ( null != msg.obj ){
 				msg.arg2 = 1;
 			}
@@ -275,35 +275,12 @@ public boolean onKeyDown(int keyCode, KeyEvent event) {
    public boolean isMobileNO(String mobiles)//判断输入电话号码有误
 
 	{  
-	   Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+	   Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(17[0-9])|(18[0-9]))\\d{8}$");
        Matcher m = p.matcher(mobiles);   
 	   System.out.println(m.matches()+"---");    
         return m.matches();
       }
 	
-//	/**
-//	 * 双击退出函数
-//	 */
-//	private static Boolean isExit = false;
-//
-//	private void exitBy2Click() {
-//		Timer tExit = null;
-//		if (isExit == false) {
-//			isExit = true; // 准备退出
-//			Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-//			tExit = new Timer();
-//			tExit.schedule(new TimerTask() {
-//				@Override
-//				public void run() {
-//					isExit = false; // 取消退出
-//				}
-//			}, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
-//
-//		} else {
-//			finish();
-//			System.exit(0);
-//		}
-//	}
 	
 
 }

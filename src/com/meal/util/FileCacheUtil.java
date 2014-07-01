@@ -1,300 +1,321 @@
 package com.meal.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
 import android.util.Log;
-
 import com.meal.bean.Global;
+
+import java.io.*;
 
 public class FileCacheUtil {
 
-	private static final String DefaultCacheDir = "mealImageCache";
+    private static final String OldCacheDir = "mealImageCache";
 
-	private static FileCacheUtil instance = null;
+    private static final String DefaultCacheDir = ".mealImageCache";
 
-	private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024; // 20M
+    private static FileCacheUtil instance = null;
 
-	private static BitmapFactory.Options sBitmapOptions;
+    private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024; // 20M
 
-	static {
+    private static BitmapFactory.Options sBitmapOptions;
 
-		sBitmapOptions = new BitmapFactory.Options();
-		sBitmapOptions.inSampleSize = 4;
-		sBitmapOptions.inPurgeable = true; // bitmap can be purged to disk
+    static {
 
-	}
+        sBitmapOptions = new BitmapFactory.Options();
+        sBitmapOptions.inSampleSize = 4;
+        sBitmapOptions.inPurgeable = true; // bitmap can be purged to disk
 
-	/**
-	 * @return
-	 */
-	public static FileCacheUtil getInstance() {
+    }
 
-		if (null == instance) {
+    /**
+     * @return
+     */
+    public static FileCacheUtil getInstance() {
 
-			instance = new FileCacheUtil();
+        if (null == instance) {
 
-		}
+            instance = new FileCacheUtil();
 
-		File dir = null;
+        }
 
-		if (!FileUtils.isFileExist(DefaultCacheDir)) {
+        File dir = null;
 
-			dir = FileUtils.creatSDDir(DefaultCacheDir);
+        if (!FileUtils.isFileExist(DefaultCacheDir)) {
 
-		} else {
+            if (FileUtils.isFileExist(OldCacheDir)) {
 
-			dir = new File(FileUtils.getSDPATH() + DefaultCacheDir);
+                try {
 
-		}
+                    File oleFile = new File(FileUtils.getSDPATH() + OldCacheDir);
 
-		instance.setmCacheDir(dir);
+                    File newFile = new File(FileUtils.getSDPATH() + DefaultCacheDir);
 
-		return instance;
+                    oleFile.renameTo(newFile);  //执行重命名
 
-	}
 
-	private File mCacheDir = null;
+                } catch (Exception e) {
 
-	private LruCache<String, Long> sFileCache = null;
+                    e.printStackTrace();
 
-	/**
-	 * 
-	 */
-	private FileCacheUtil() {
+                    dir = FileUtils.creatSDDir(DefaultCacheDir);
 
-		sFileCache = new LruCache<String, Long>(MAX_CACHE_SIZE) {
+                }
 
-			@Override
-			protected void entryRemoved(boolean evicted, String key,
-					Long oldValue, Long newValue) {
+            } else {
 
-				File file = getFile(key);
+                dir = FileUtils.creatSDDir(DefaultCacheDir);
 
-				if (null != file) {
+            }
 
-					file.delete();
+        } else {
 
-				}
+            dir = new File(FileUtils.getSDPATH() + DefaultCacheDir);
 
-			}
+        }
 
-			@Override
-			public int sizeOf(String key, Long value) {
+        instance.setmCacheDir(dir);
 
-				return value.intValue();
+        return instance;
 
-			}
+    }
 
-		};
+    private File mCacheDir = null;
 
-	}
+    private LruCache<String, Long> sFileCache = null;
 
-	/**
-	 * @param URL
-	 * @return
-	 */
-	private String _getFileNameFromURL(String URL) {
+    /**
+     *
+     */
+    private FileCacheUtil() {
 
-		String fileName = null;
+        sFileCache = new LruCache<String, Long>(MAX_CACHE_SIZE) {
 
-		if (null != URL) {
+            @Override
+            protected void entryRemoved(boolean evicted, String key,
+                                        Long oldValue, Long newValue) {
 
-			int position = URL.lastIndexOf("/");
+                File file = getFile(key);
 
-			if (-1 != position) {
+                if (null != file) {
 
-				fileName = URL.substring(position + 1);
+                    file.delete();
 
-			}
+                }
 
-		}
+            }
 
-		return fileName;
+            @Override
+            public int sizeOf(String key, Long value) {
 
-	}
+                return value.intValue();
 
-	// 获取bitmap
-	/**
-	 * @param key
-	 * @return
-	 */
-	public Bitmap getBitmap(String key) {
+            }
 
-		String fileName = _getFileNameFromURL(key);
+        };
 
-		File bitmapFile = getFile(fileName);
+    }
 
-		Bitmap bitmap = null;
+    /**
+     * @param URL
+     * @return
+     */
+    private String _getFileNameFromURL(String URL) {
 
-		if (null!=bitmapFile && bitmapFile.exists()) {
+        String fileName = null;
 
-			try {
+        if (null != URL) {
 
-				bitmap = BitmapFactory.decodeStream(new FileInputStream(
-						bitmapFile), null, sBitmapOptions);
+            int position = URL.lastIndexOf("/");
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
+            if (-1 != position) {
 
-				e.printStackTrace();
+                fileName = URL.substring(position + 1);
 
-			}
+            }
 
-			if (bitmap != null) {
+        }
 
-				// 重新将其缓存至硬引用中
-				Global.multiCache.putBitmap(key, bitmap);
+        return fileName;
 
-			}
+    }
 
-		}
-		return bitmap;
+    // 获取bitmap
 
-	}
+    /**
+     * @param key
+     * @return
+     */
+    public Bitmap getBitmap(String key) {
 
-	/**
-	 * @param fileName
-	 * @return
-	 */
-	private File getFile(String fileName) {
+        String fileName = _getFileNameFromURL(key);
 
-		File file = null;
-		
-		if ( null != fileName && !fileName.equals("") ){
-			
-			file = new File(getmCacheDir(), fileName);
+        File bitmapFile = getFile(fileName);
 
-			if (!file.exists() || !file.isFile()) {
+        Bitmap bitmap = null;
 
-				try {
+        if (null != bitmapFile && bitmapFile.exists()) {
 
-					throw new FileNotFoundException("文件不存在或有同名文件夹");
+            try {
 
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
+                bitmap = BitmapFactory.decodeStream(new FileInputStream(
+                        bitmapFile), null, sBitmapOptions);
 
-					e.printStackTrace();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
 
-				}
+                e.printStackTrace();
 
-			}
-			
-		}	
+            }
 
-		return file;
+            if (bitmap != null) {
 
-	}
+                // 重新将其缓存至硬引用中
+                Global.multiCache.putBitmap(key, bitmap);
 
-	public File getmCacheDir() {
-		return mCacheDir;
-	}
+            }
 
-	// 根据key获取OutputStream
-	private FileOutputStream getOutputStream(String key) {
+        }
+        return bitmap;
 
-		FileOutputStream fos = null;
+    }
 
-		if (null != getmCacheDir()) {
+    /**
+     * @param fileName
+     * @return
+     */
+    private File getFile(String fileName) {
 
-			try {
+        File file = null;
 
-				fos = new FileOutputStream(getmCacheDir().getAbsolutePath()
-						+ File.separator + key);
+        if (null != fileName && !fileName.equals("")) {
 
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+            file = new File(getmCacheDir(), fileName);
 
-				e.printStackTrace();
+            if (!file.exists() || !file.isFile()) {
 
-			}
+                try {
 
-		}
+                    throw new FileNotFoundException("文件不存在或有同名文件夹");
 
-		return fos;
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
 
-	}
+                    e.printStackTrace();
 
-	// 缓存bitmap到外部存储
-	/**
-	 * @param key
-	 * @param bitmap
-	 * @return
-	 */
-	public boolean putBitmap(String key, Bitmap bitmap) {
+                }
 
-		boolean result = false;
+            }
 
-		String fileName = _getFileNameFromURL(key);
-		
-		if ( null != fileName && !fileName.equals("") && null != bitmap){
+        }
 
-			File file = getFile(fileName);
+        return file;
 
-			if ( null != file && file.exists()) {
+    }
 
-				Log.v("tag", "文件已经存在");
+    public File getmCacheDir() {
+        return mCacheDir;
+    }
 
-				result = true;
+    // 根据key获取OutputStream
+    private FileOutputStream getOutputStream(String key) {
 
-			} else {
+        FileOutputStream fos = null;
 
-				FileOutputStream fos = getOutputStream(fileName);
-				
-				boolean saved = false;
-				
-				try{
-					
-					saved = bitmap.compress(CompressFormat.JPEG, 100, fos);
-					
-				}
-				catch( Exception e ){
-					
-					e.printStackTrace();
-	
-				}
+        if (null != getmCacheDir()) {
 
-				try {
+            try {
 
-					fos.flush();
-					fos.close();
+                fos = new FileOutputStream(getmCacheDir().getAbsolutePath()
+                        + File.separator + key);
 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
 
-					e.printStackTrace();
+                e.printStackTrace();
 
-				}
+            }
 
-				if (saved) {
+        }
 
-					synchronized (sFileCache) {
+        return fos;
 
-						sFileCache.put(fileName, getFile(fileName).length());
+    }
 
-					}
+    // 缓存bitmap到外部存储
 
-					result = true;
+    /**
+     * @param key
+     * @param bitmap
+     * @return
+     */
+    public boolean putBitmap(String key, Bitmap bitmap) {
 
-				}
+        boolean result = false;
 
-			}
-			
-		}
+        String fileName = _getFileNameFromURL(key);
 
-		return result;
+        if (null != fileName && !fileName.equals("") && null != bitmap) {
 
-	}
+            File file = getFile(fileName);
 
-	public void setmCacheDir(File mCacheDir) {
-		this.mCacheDir = mCacheDir;
-	}
+            if (null != file && file.exists()) {
+
+                Log.v("tag", "文件已经存在");
+
+                result = true;
+
+            } else {
+
+                FileOutputStream fos = getOutputStream(fileName);
+
+                boolean saved = false;
+
+                try {
+
+                    saved = bitmap.compress(CompressFormat.JPEG, 100, fos);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+
+                }
+
+                try {
+
+                    fos.flush();
+                    fos.close();
+
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+
+                    e.printStackTrace();
+
+                }
+
+                if (saved) {
+
+                    synchronized (sFileCache) {
+
+                        sFileCache.put(fileName, getFile(fileName).length());
+
+                    }
+
+                    result = true;
+
+                }
+
+            }
+
+        }
+
+        return result;
+
+    }
+
+    public void setmCacheDir(File mCacheDir) {
+        this.mCacheDir = mCacheDir;
+    }
 
 }
