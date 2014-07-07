@@ -213,7 +213,7 @@ public class HistoryDetailOrder extends BaseActivity{
 								
 
 								
-								orderDetailMap.put("saleUserName", "用户订单号:    "+tempOrder.getOid()+ "\n商品列表:\n"+menuResult);
+								orderDetailMap.put("saleUserName", "用户订单号:   "+tempOrder.getOid()+ "   总价："+tempOrder.getPay() + "\n商品列表:\n"+menuResult);
 								orderDetailMap.put("saeUserTotal", "用户订单详情:    "+tempOrder.getAddress()+"  "+tempOrder.getPhone()+" \n订单时间:  "+tempOrder.getTime());
 								orderDetailList.add(orderDetailMap);
 					    	}				
