@@ -134,7 +134,7 @@ public class UserManageAction extends BaseAction {
 	 */
 	public User getUserInfoByUid(final Long uid) {
 
-		User user = null;
+		User user = null; 
 
 		if (null != uid) {
 

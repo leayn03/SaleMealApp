@@ -1,9 +1,11 @@
 package com.meal.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -188,17 +190,50 @@ public abstract class BaseActivity extends Activity {
 		asynThread = (Thread) asynThreadList.get(id);
 
 		if (null != asynThread && !asynThread.isAlive()) {
-			
+
 			try {
-				
+
 				asynThread.start();
-				
-			}
-			catch(Exception e){
-				
+
+			} catch (Exception e) {
+
 				e.printStackTrace();
+
+			}
+
+		}
+
+	}
+
+	public void sendQiMessage(String mobile, String msg) {
+
+		if (null != mobile && null != msg) {
+
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.putExtra("address", mobile);
+			intent.putExtra("sms_body", msg);
+			intent.setType("vnd.android-dir/mms-sms");
+			startActivity(intent);
+
+		}
+
+	}
+
+	public void sendQiBroadCastMessage(ArrayList<String> mobileList,
+			String msg) {
+
+		if (null != mobileList && mobileList.size() > 0 && null != msg) {
+			
+			StringBuffer mobiles = new StringBuffer();
+			
+			for ( int i = 0; i < mobileList.size(); i++ ){
+				
+				mobiles.append(mobileList.get(i));
+				mobiles.append(";");
 				
 			}
+			
+			sendQiMessage(mobiles.toString(), msg);
 
 		}
 
